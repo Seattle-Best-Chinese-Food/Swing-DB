@@ -1,5 +1,6 @@
 package com.example.swing.view;
 
+import com.example.swing.utils.ButtonUtils;
 import com.example.swing.controller.AdminMenuController;
 import com.example.swing.model.Dish;
 
@@ -31,7 +32,7 @@ public class AdminMenuPage {
         SwingUtilities.invokeLater(this::createAndShowGUI);
     }
 
-    // create and show the GUI  
+    // create and show the GUI
     private void createAndShowGUI() {
         frame = new JFrame("Admin Menu");
         frame.setSize(800, 600);
@@ -46,7 +47,7 @@ public class AdminMenuPage {
         frame.setVisible(true);
     }
 
-    // initialize the components    
+    // initialize the components
     private void initComponents() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
@@ -90,8 +91,9 @@ public class AdminMenuPage {
         return inputPanel;
     }
 
+    // create the table panel
     private JScrollPane createTablePanel() {
-        String[] columnNames = {"Dish", "Price", "Details", "Image", "Action"};
+        String[] columnNames = { "Dish", "Price", "Details", "Image", "Action" };
         tableModel = new DefaultTableModel(columnNames, 0);
 
         table = new JTable(tableModel) {
@@ -113,18 +115,19 @@ public class AdminMenuPage {
         List<Dish> dishes = controller.getAllDishes();
         tableModel.setRowCount(0);
         for (Dish d : dishes) {
-            tableModel.addRow(new Object[]{d.getName(), d.getPrice(), d.getDescription(), d.getImageUrl(), ""});
+            tableModel.addRow(new Object[] { d.getName(), d.getPrice(), d.getDescription(), d.getImageUrl(), "" });
         }
     }
 
-    // add a dish   
+    // add a dish
     private void addDish() {
-        controller.addDish(nameField.getText(), Double.parseDouble(priceField.getText()), detailsField.getText(), imageURLField.getText());
+        controller.addDish(nameField.getText(), Double.parseDouble(priceField.getText()), detailsField.getText(),
+                imageURLField.getText());
         clearInputFields();
         loadDishes();
     }
 
-    // edit a dish  
+    // edit a dish
     private void editDish(int row) {
         Dish dish = controller.getAllDishes().get(row);
         nameField.setText(dish.getName());
@@ -137,7 +140,7 @@ public class AdminMenuPage {
         addButton.setText("Update");
     }
 
-    // delete a dish    
+    // delete a dish
     private void deleteDish(int row) {
         Dish dish = controller.getAllDishes().get(row);
         controller.deleteDish(dish.getItemId());
@@ -148,7 +151,8 @@ public class AdminMenuPage {
     private void updateDish() {
         if (editingRow >= 0) {
             Dish dish = controller.getAllDishes().get(editingRow);
-            controller.updateDish(dish.getItemId(), nameField.getText(), Double.parseDouble(priceField.getText()), detailsField.getText(), imageURLField.getText());
+            controller.updateDish(dish.getItemId(), nameField.getText(), Double.parseDouble(priceField.getText()),
+                    detailsField.getText(), imageURLField.getText());
 
             isEditMode = false;
             editingRow = -1;
@@ -172,26 +176,21 @@ public class AdminMenuPage {
 
         public ActionCellRenderer() {
             setLayout(new FlowLayout(FlowLayout.CENTER, 5, 0));
-            deleteButton = new JButton("Delete");
-            editButton = new JButton("Edit");
-
-            deleteButton.setPreferredSize(new Dimension(65, 25));
-            editButton.setPreferredSize(new Dimension(65, 25));
-
-            deleteButton.setForeground(new Color(242, 88, 53));
-            editButton.setForeground(new Color(87, 154, 242));
+            deleteButton = ButtonUtils.createButton("Delete", new Color(242, 88, 53));
+            editButton = ButtonUtils.createButton("Edit", new Color(87, 154, 242));
 
             add(deleteButton);
             add(editButton);
         }
 
         @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
             return this;
         }
     }
 
-    // action cell editor   
+    // action cell editor
     static class ActionCellEditor extends AbstractCellEditor implements TableCellEditor {
         private final JPanel panel;
         private final JButton deleteButton;
@@ -202,14 +201,12 @@ public class AdminMenuPage {
         public ActionCellEditor(AdminMenuPage adminMenuPage) {
             this.adminMenuPage = adminMenuPage;
             panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
-            deleteButton = new JButton("Delete");
-            editButton = new JButton("Edit");
-
-            deleteButton.setPreferredSize(new Dimension(65, 25));
-            editButton.setPreferredSize(new Dimension(65, 25));
-
+            deleteButton = ButtonUtils.createButton("Delete", new Color(242, 88, 53));
+            editButton = ButtonUtils.createButton("Edit", new Color(87, 154, 242));
+            
             deleteButton.addActionListener(e -> {
-                int confirm = JOptionPane.showConfirmDialog(null, "Do you want to delete this dish?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+                int confirm = JOptionPane.showConfirmDialog(null, "Do you want to delete this dish?", "Confirm Delete",
+                        JOptionPane.YES_NO_OPTION);
                 if (confirm == JOptionPane.YES_OPTION) {
                     adminMenuPage.deleteDish(currentRow);
                 }
@@ -226,7 +223,8 @@ public class AdminMenuPage {
         }
 
         @Override
-        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row,
+                int column) {
             this.currentRow = row;
             return panel;
         }
