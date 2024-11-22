@@ -140,7 +140,7 @@ public class CustomerMenuPage {
         centerPanel.add(descriptionLabel, gbc);
 
         // Order Button
-        JButton orderButton = ButtonUtils.createButton("Order", Color.BLUE);
+        JButton orderButton = ButtonUtils.createButton("Add", Color.BLUE);
         orderButton.setPreferredSize(new Dimension(100, 40));
 
         // Create a panel to hold the order button
