@@ -9,6 +9,9 @@ import org.springframework.context.ApplicationContext;
 
 import com.example.swing.controller.AdminMenuController;
 import com.example.swing.view.AdminMenuPage;
+import com.example.swing.view.CustomerMenuView;
+import com.example.swing.ui.CustomerMenuPage;
+import com.example.swing.controller.CustomerMenuController;
 
 
 @SpringBootApplication
@@ -25,8 +28,16 @@ public class SwingApplication {
         ApplicationContext context = app.run(args);
 
         // Fetch the ContactDAO bean
-        ContactDAO contactDAO = context.getBean(ContactDAO.class);
+        // ContactDAO contactDAO = context.getBean(ContactDAO.class);
         DishDAO dishDAO = context.getBean(DishDAO.class);
+
+
+		// CustomerMenuPage customerMenuPage = new CustomerMenuPage(dishDAO);
+		// customerMenuPage.initialize();
+		
+		// MVC Customer Menu
+		CustomerMenuView view = new CustomerMenuView(); // Initialize the view first
+        CustomerMenuController controller = new CustomerMenuController(dishDAO, view); // Pass the view to the controller
 
 
 		// AdminMenuPage frame2 = new AdminMenuPage(dishDAO);
@@ -38,13 +49,13 @@ public class SwingApplication {
 
 
 		// Create an instance of AdminMenuController and pass the DishDAO
-        AdminMenuController controller = new AdminMenuController(dishDAO);
+        // AdminMenuController controller = new AdminMenuController(dishDAO);
 
-        // Create an instance of AdminMenuPage and pass the controller
-        AdminMenuPage adminMenuPage = new AdminMenuPage(controller);
+        // // Create an instance of AdminMenuPage and pass the controller
+        // AdminMenuPage adminMenuPage = new AdminMenuPage(controller);
 
-        // Initialize the AdminMenuPage
-        adminMenuPage.initialize();
+        // // Initialize the AdminMenuPage
+        // adminMenuPage.initialize();
 
 
 	}

@@ -1,25 +1,23 @@
-package com.example.swing.ui;
+package com.example.swing.view;
 
 import javax.swing.*;
 import java.awt.*;
-import com.example.swing.dao.DishDAO;
-import com.example.swing.model.Dish;
-import java.util.List;
-import com.example.swing.utils.ButtonUtils;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class CustomerMenuPage {
+import com.example.swing.model.Dish;
+import com.example.swing.utils.ButtonUtils;
+import java.awt.event.ActionListener;
+
+public class CustomerMenuView {
     private JFrame frame;
-    private DishDAO dishDAO;
-    private List<Dish> dishes;
     private JPanel cardPanel;
-    private List<Dish> cart;
     private JButton viewOrderButton;
+     private Map<Dish, JButton> orderButtons = new HashMap<>(); // Store buttons associated with each dish
 
-    public CustomerMenuPage(DishDAO dishDAO) {
-        this.dishDAO = dishDAO;
-        this.cart = new ArrayList<>();
+    public CustomerMenuView() {
+        initialize();
     }
 
     public void initialize() {
@@ -45,13 +43,11 @@ public class CustomerMenuPage {
         panel.add(menuLabel, BorderLayout.NORTH);
 
         cardPanel = new JPanel();
-        cardPanel.setLayout(new BoxLayout(cardPanel, BoxLayout.Y_AXIS)); // Stack cards vertically
+        cardPanel.setLayout(new BoxLayout(cardPanel, BoxLayout.Y_AXIS));
         cardPanel.setBackground(Color.WHITE);
 
-        loadDishes();
-
         JScrollPane scrollPane = new JScrollPane(cardPanel);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16); // Optional: smoother scrolling
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         panel.add(scrollPane, BorderLayout.CENTER);
 
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -62,61 +58,60 @@ public class CustomerMenuPage {
         frame.add(panel);
     }
 
-    // Load the dishes from the DAO
-    private void loadDishes() {
-        dishes = dishDAO.getAll();
-        for (Dish d : dishes) {
-            createDishCard(d.getItemId(), d.getName(), d.getImageUrl(), d.getPrice(), d.getDescription());
-        }
+    public void addDishCard(JPanel card) {
+        cardPanel.add(card);
+        cardPanel.add(Box.createRigidArea(new Dimension(0, 10)));
     }
 
-    // Create a dish card with components arranged horizontally, including the name label
-    private void createDishCard(String itemId, String name, String imgUrl, Double price, String details) {
+    public JButton getViewOrderButton() {
+        return viewOrderButton;
+    }
+
+    public JButton getOrderButton(Dish dish) {
+        return orderButtons.get(dish);
+    }
+
+
+    public JPanel createDishCard(Dish dish, ActionListener orderAction) {
         JPanel card = new JPanel(new BorderLayout());
         card.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(Color.GRAY, 1, true),
                 BorderFactory.createEmptyBorder(10, 10, 10, 10)
         ));
         card.setBackground(Color.WHITE);
-        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 180)); // Allow card to expand horizontally
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 180));
 
-        // Left Panel containing name label and image label
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.X_AXIS));
         leftPanel.setBackground(Color.WHITE);
 
-        // Name Label
-        JLabel nameLabel = new JLabel(name);
+        JLabel nameLabel = new JLabel(dish.getName());
         nameLabel.setFont(new Font("Arial", Font.BOLD, 16));
         nameLabel.setPreferredSize(new Dimension(100, 150));
         nameLabel.setMaximumSize(new Dimension(100, 150));
         nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
         nameLabel.setVerticalAlignment(SwingConstants.CENTER);
-        nameLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10)); // Add some space between name and image
+        nameLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
 
-        // Image Label
         JLabel imageLabel = new JLabel();
         imageLabel.setPreferredSize(new Dimension(150, 150));
         imageLabel.setMaximumSize(new Dimension(150, 150));
         imageLabel.setBackground(new Color(242, 224, 208));
         imageLabel.setOpaque(true);
         imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        imageLabel.setText("Image"); // Placeholder text
-        // Optionally, load image from URL
+        imageLabel.setText("Image");
         try {
-            ImageIcon icon = new ImageIcon(new URL(imgUrl));
+            ImageIcon icon = new ImageIcon(new URL(dish.getImageUrl()));
             Image scaledImage = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
             imageLabel.setIcon(new ImageIcon(scaledImage));
-            imageLabel.setText(""); // Remove placeholder text
+            imageLabel.setText("");
         } catch (Exception e) {
             imageLabel.setText("Image not available");
         }
 
-        // Add nameLabel and imageLabel to leftPanel
         leftPanel.add(nameLabel);
         leftPanel.add(imageLabel);
 
-        // Center Panel to center priceLabel and descriptionLabel both vertically and horizontally
         JPanel centerPanel = new JPanel(new GridBagLayout());
         centerPanel.setBackground(Color.WHITE);
 
@@ -125,8 +120,7 @@ public class CustomerMenuPage {
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.insets = new Insets(5, 0, 5, 0);
 
-        // Price Label
-        JLabel priceLabel = new JLabel(String.format("$%.2f", price));
+        JLabel priceLabel = new JLabel(String.format("$%.2f", dish.getPrice()));
         priceLabel.setFont(new Font("Arial", Font.BOLD, 18));
         priceLabel.setHorizontalAlignment(SwingConstants.CENTER);
         priceLabel.setVerticalAlignment(SwingConstants.CENTER);
@@ -134,8 +128,7 @@ public class CustomerMenuPage {
         gbc.gridy = 0;
         centerPanel.add(priceLabel, gbc);
 
-        // Description Label
-        JLabel descriptionLabel = new JLabel("<html><p style=\"width:250px; text-align:center;\">" + details + "</p></html>");
+        JLabel descriptionLabel = new JLabel("<html><p style=\"width:250px; text-align:center;\">" + dish.getDescription() + "</p></html>");
         descriptionLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         descriptionLabel.setForeground(Color.DARK_GRAY);
         descriptionLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -144,48 +137,26 @@ public class CustomerMenuPage {
         gbc.gridy = 1;
         centerPanel.add(descriptionLabel, gbc);
 
-        // Order Button
         JButton orderButton = ButtonUtils.createButton("Add", Color.BLUE);
         orderButton.setPreferredSize(new Dimension(100, 40));
-        // Add action listener to the order button
-        orderButton.addActionListener(e -> {
-            // Find the dish in the dishes list using itemId
-            Dish dishToAdd = dishes.stream()
-                                   .filter(d -> d.getItemId().equals(itemId))
-                                   .findFirst()
-                                   .orElse(null);
-            if (dishToAdd != null) {
-                // Add the dish to the cart
-                cart.add(dishToAdd);
-                // Change button text to "Success"
-                orderButton.setText("Success");
-                // Optionally, disable the button to prevent multiple additions
-                orderButton.setEnabled(false);
+        orderButton.addActionListener(orderAction);
 
-                 // Update the view order button text with the new cart count
-                viewOrderButton.setText("View Order (" + cart.size() + ")");
-            }
-        });
+        orderButtons.put(dish, orderButton);
 
-        // Create a panel to hold the order button
-        JPanel buttonPanel = new JPanel(new GridBagLayout()); // Use GridBagLayout to center the button
+        JPanel buttonPanel = new JPanel(new GridBagLayout());
         buttonPanel.setBackground(Color.WHITE);
         buttonPanel.setPreferredSize(new Dimension(120, 150));
 
-        // Add the order button to the button panel
         GridBagConstraints buttonGbc = new GridBagConstraints();
         buttonGbc.gridx = 0;
         buttonGbc.gridy = 0;
         buttonGbc.anchor = GridBagConstraints.CENTER;
         buttonPanel.add(orderButton, buttonGbc);
 
-        // Add components to card
         card.add(leftPanel, BorderLayout.WEST);
         card.add(centerPanel, BorderLayout.CENTER);
         card.add(buttonPanel, BorderLayout.EAST);
 
-        // Add spacing between cards
-        cardPanel.add(card);
-        cardPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        return card;
     }
 }
