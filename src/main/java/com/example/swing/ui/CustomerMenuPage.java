@@ -6,6 +6,7 @@ import com.example.swing.dao.DishDAO;
 import com.example.swing.model.Dish;
 import java.util.List;
 import com.example.swing.utils.ButtonUtils;
+import java.net.URL;
 
 public class CustomerMenuPage {
     private JFrame frame;
@@ -98,14 +99,14 @@ public class CustomerMenuPage {
         imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
         imageLabel.setText("Image"); // Placeholder text
         // Optionally, load image from URL
-        // try {
-        //     ImageIcon icon = new ImageIcon(new URL(imgUrl));
-        //     Image scaledImage = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
-        //     imageLabel.setIcon(new ImageIcon(scaledImage));
-        //     imageLabel.setText(""); // Remove placeholder text
-        // } catch (Exception e) {
-        //     imageLabel.setText("Image not available");
-        // }
+        try {
+            ImageIcon icon = new ImageIcon(new URL(imgUrl));
+            Image scaledImage = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+            imageLabel.setIcon(new ImageIcon(scaledImage));
+            imageLabel.setText(""); // Remove placeholder text
+        } catch (Exception e) {
+            imageLabel.setText("Image not available");
+        }
 
         // Add nameLabel and imageLabel to leftPanel
         leftPanel.add(nameLabel);
