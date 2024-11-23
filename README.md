@@ -8,9 +8,9 @@
 ### TODO:
 
 1. signUp/signIn
-<img width="797" alt="image" src="https://github.com/user-attachments/assets/972db4d2-a2d8-478f-a1ed-6c73a35f1a2b">
+   <img width="797" alt="image" src="https://github.com/user-attachments/assets/972db4d2-a2d8-478f-a1ed-6c73a35f1a2b">
 2. Custmer review orders (just review)
-<img width="797" alt="image" src="https://github.com/user-attachments/assets/00ef6a4c-44c2-4b35-a9d4-50af0c068c0f">
+   <img width="797" alt="image" src="https://github.com/user-attachments/assets/00ef6a4c-44c2-4b35-a9d4-50af0c068c0f">
 3. Admin review order page ( edit order status )
-<img width="799" alt="image" src="https://github.com/user-attachments/assets/9a21bdbf-177d-4731-81af-cafc26ee4789">
+   <img width="799" alt="image" src="https://github.com/user-attachments/assets/9a21bdbf-177d-4731-81af-cafc26ee4789">
    
