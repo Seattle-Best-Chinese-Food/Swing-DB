@@ -7,14 +7,29 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
+import java.util.UUID;
+import java.util.ArrayList;
+import com.example.swing.model.Order;
+import com.example.swing.model.OrderItem;
+import com.example.swing.dao.OrderDAO;
+import com.example.swing.dao.OrderItemDAO;
+
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.stereotype.Component;
 
 public class OrderPopup {
     private JDialog orderDialog;
     private JPanel orderPanel;
     private JLabel totalLabel;
     private Map<Dish, Integer> quantities;
+    private final OrderDAO orderDAO;
+    private final OrderItemDAO orderItemDAO;
 
-    public OrderPopup(JFrame parentFrame) {
+    
+    public OrderPopup(JFrame parentFrame, OrderDAO orderDAO, OrderItemDAO orderItemDAO) {
+        this.orderDAO = orderDAO;
+        this.orderItemDAO = orderItemDAO;
         orderDialog = new JDialog(parentFrame, "Your Order", true);
         orderDialog.setSize(400, 300);
         orderDialog.setLayout(new BorderLayout());
@@ -25,12 +40,48 @@ public class OrderPopup {
         totalLabel = new JLabel();
         JButton submitButton = new JButton("Submit Order");
 
+        submitButton.addActionListener(e -> {
+            submitOrder();
+        });
+
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         bottomPanel.add(totalLabel);
         bottomPanel.add(submitButton);
 
         orderDialog.add(new JScrollPane(orderPanel), BorderLayout.CENTER);
         orderDialog.add(bottomPanel, BorderLayout.SOUTH);
+    }
+
+    private void submitOrder() {
+        String orderId = UUID.randomUUID().toString();
+        Date orderDate = new Date();
+
+        // Create a list to store order items
+        List<OrderItem> orderItems = new ArrayList<>();
+
+        for (Map.Entry<Dish, Integer> entry : quantities.entrySet()) {
+            Dish dish = entry.getKey();
+            int quantity = entry.getValue();
+
+            OrderItem orderItem = new OrderItem(orderId, dish.getItemId(), dish.getName(), dish.getPrice(),
+                    dish.getDescription(), dish.getImageUrl(), quantity);
+            orderItems.add(orderItem);
+        }
+
+        // Create an order object
+        Order order = new Order(orderId, orderDate, orderItems);
+
+
+        orderDAO.save(order);
+        for (OrderItem orderItem : orderItems) {
+            orderItemDAO.save(orderItem);
+        }
+
+        // Optionally, show a confirmation message
+        JOptionPane.showMessageDialog(orderDialog, "Order submitted successfully!");
+
+        // Close the dialog
+        orderDialog.dispose();
     }
 
     public void showOrderPopup(List<Dish> cart) {
@@ -103,4 +154,4 @@ public class OrderPopup {
         }
         totalLabel.setText("Total: $" + String.format("%.2f", totalPrice));
     }
-} 
+}

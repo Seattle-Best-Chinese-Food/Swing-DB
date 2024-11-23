@@ -4,6 +4,8 @@ import com.example.swing.dao.DishDAO;
 import com.example.swing.model.Dish;
 import com.example.swing.view.CustomerMenuView;
 import com.example.swing.view.OrderPopup;
+import com.example.swing.dao.OrderDAO;
+import com.example.swing.dao.OrderItemDAO;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
@@ -18,11 +20,11 @@ public class CustomerMenuController {
     private CustomerMenuView view;
     private OrderPopup orderPopup;
 
-    public CustomerMenuController(DishDAO dishDAO, CustomerMenuView view) {
+    public CustomerMenuController(DishDAO dishDAO, CustomerMenuView view, OrderDAO orderDAO, OrderItemDAO orderItemDAO) {
         this.dishDAO = dishDAO;
         this.cart = new ArrayList<>();
         this.view = view;
-        this.orderPopup = new OrderPopup(view.getFrame());
+        this.orderPopup = new OrderPopup(view.getFrame(), orderDAO, orderItemDAO);
         loadDishes();
         setupViewOrderButton();
     }

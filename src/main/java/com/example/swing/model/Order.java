@@ -11,10 +11,13 @@ public class Order {
 
     public Order() {}
 
-    public Order(String orderId, Date orderDate, double totalPrice, List<OrderItem> orderItems) {
+    public Order(String orderId, Date orderDate, List<OrderItem> orderItems) {
         this.orderId = orderId;
         this.orderDate = orderDate;
-        this.totalPrice = totalPrice;
+        // calculate total price by using quantity * price
+        this.totalPrice = orderItems.stream()
+                .mapToDouble(item -> item.getQuantity() * item.getPrice())
+                .sum();
         this.orderItems = orderItems;
     }
 
