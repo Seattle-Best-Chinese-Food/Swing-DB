@@ -3,23 +3,28 @@ package com.example.swing.controller;
 import com.example.swing.dao.DishDAO;
 import com.example.swing.model.Dish;
 import com.example.swing.view.CustomerMenuView;
+import com.example.swing.view.OrderPopup;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class CustomerMenuController {
     private DishDAO dishDAO;
     private List<Dish> dishes;
     private List<Dish> cart;
     private CustomerMenuView view;
+    private OrderPopup orderPopup;
 
     public CustomerMenuController(DishDAO dishDAO, CustomerMenuView view) {
         this.dishDAO = dishDAO;
         this.cart = new ArrayList<>();
         this.view = view;
+        this.orderPopup = new OrderPopup(view.getFrame());
         loadDishes();
+        setupViewOrderButton();
     }
 
     private void loadDishes() {
@@ -36,5 +41,9 @@ public class CustomerMenuController {
         view.getViewOrderButton().setText("View Order (" + cart.size() + ")");
         view.getOrderButton(dish).setText("Success");
         view.getOrderButton(dish).setEnabled(false);
+    }
+
+    private void setupViewOrderButton() {
+        view.getViewOrderButton().addActionListener(e -> orderPopup.showOrderPopup(cart));
     }
 }

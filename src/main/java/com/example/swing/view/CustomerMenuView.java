@@ -5,7 +5,6 @@ import java.awt.*;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-
 import com.example.swing.model.Dish;
 import com.example.swing.utils.ButtonUtils;
 import java.awt.event.ActionListener;
@@ -14,7 +13,7 @@ public class CustomerMenuView {
     private JFrame frame;
     private JPanel cardPanel;
     private JButton viewOrderButton;
-     private Map<Dish, JButton> orderButtons = new HashMap<>(); // Store buttons associated with each dish
+    private Map<Dish, JButton> orderButtons = new HashMap<>(); // Store buttons associated with each dish
 
     public CustomerMenuView() {
         initialize();
@@ -22,6 +21,10 @@ public class CustomerMenuView {
 
     public void initialize() {
         SwingUtilities.invokeLater(this::createAndShowGUI);
+    }
+
+    public JFrame getFrame() {
+        return frame;
     }
 
     private void createAndShowGUI() {
@@ -71,13 +74,11 @@ public class CustomerMenuView {
         return orderButtons.get(dish);
     }
 
-
     public JPanel createDishCard(Dish dish, ActionListener orderAction) {
         JPanel card = new JPanel(new BorderLayout());
         card.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(Color.GRAY, 1, true),
-                BorderFactory.createEmptyBorder(10, 10, 10, 10)
-        ));
+                BorderFactory.createEmptyBorder(10, 10, 10, 10)));
         card.setBackground(Color.WHITE);
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 180));
 
@@ -128,7 +129,8 @@ public class CustomerMenuView {
         gbc.gridy = 0;
         centerPanel.add(priceLabel, gbc);
 
-        JLabel descriptionLabel = new JLabel("<html><p style=\"width:250px; text-align:center;\">" + dish.getDescription() + "</p></html>");
+        JLabel descriptionLabel = new JLabel(
+                "<html><p style=\"width:250px; text-align:center;\">" + dish.getDescription() + "</p></html>");
         descriptionLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         descriptionLabel.setForeground(Color.DARK_GRAY);
         descriptionLabel.setHorizontalAlignment(SwingConstants.CENTER);
