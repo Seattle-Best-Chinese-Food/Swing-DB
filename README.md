@@ -2,7 +2,7 @@
 
 1. Dishes add, edit and delete functions for admin1.
    <img width="804" alt="image" src="https://github.com/user-attachments/assets/c2dd2f9c-a159-41e9-ab40-85eb5efcbd68">         
-2. Dishes browser, pick up, and submit an order2. Dishes browser, pick up, and submit an order
+2. Dishes browser, pick up, and submit an order
    <img width="1146" alt="image" src="https://github.com/user-attachments/assets/481592eb-d036-4961-ab9a-ccad28bac636">   
 
 ### TODO:
