@@ -13,6 +13,9 @@ import com.example.swing.view.AdminMenuPage;
 import com.example.swing.view.CustomerMenuView;
 import com.example.swing.controller.CustomerMenuController;
 
+import com.example.swing.view.AdminOrderManagementPage;
+import com.example.swing.controller.AdminOrderController;
+
 
 @SpringBootApplication
 public class SwingApplication {
@@ -28,13 +31,18 @@ public class SwingApplication {
         ApplicationContext context = app.run(args);
 
         DishDAO dishDAO = context.getBean(DishDAO.class);
-        OrderDAO orderDAO = context.getBean(OrderDAO.class);
         OrderItemDAO orderItemDAO = context.getBean(OrderItemDAO.class);
+        OrderDAO orderDAO = context.getBean(OrderDAO.class);
 
 		
-		// MVC Customer Menu
-		CustomerMenuView view = new CustomerMenuView(); // Initialize the view first
-        CustomerMenuController controller = new CustomerMenuController(dishDAO, view, orderDAO, orderItemDAO); // Pass the view to the controller
+		// // MVC Customer Menu
+		// CustomerMenuView view = new CustomerMenuView(); // Initialize the view first
+        // CustomerMenuController controller = new CustomerMenuController(dishDAO, view, orderDAO, orderItemDAO); // Pass the view to the controller
+
+        // admin order management
+        AdminOrderController adminOrderController = new AdminOrderController(orderDAO);
+        AdminOrderManagementPage adminOrderManagementPage = new AdminOrderManagementPage(adminOrderController); 
+        adminOrderManagementPage.initialize();
 
 
 		// Create an instance of AdminMenuController and pass the DishDAO

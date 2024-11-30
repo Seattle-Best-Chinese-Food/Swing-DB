@@ -12,6 +12,7 @@ import java.util.UUID;
 import java.util.ArrayList;
 import com.example.swing.model.Order;
 import com.example.swing.model.OrderItem;
+import com.example.swing.model.OrderStatus;
 import com.example.swing.dao.OrderDAO;
 import com.example.swing.dao.OrderItemDAO;
 
@@ -68,12 +69,15 @@ public class OrderPopup {
             orderItems.add(orderItem);
         }
 
-        // Create an order object
-        Order order = new Order(orderId, orderDate, orderItems);
+        // TODO: Get the customer ID from the logged-in user
+        String hardcodCustomerId = "customer123";
+        System.out.println(OrderStatus.PENDING + " OrderStatus.PENDING");
+        Order order = new Order(orderId, orderDate, orderItems, OrderStatus.PENDING.getValue(), hardcodCustomerId);
 
 
         orderDAO.save(order);
         for (OrderItem orderItem : orderItems) {
+            System.out.println(orderItem + " orderItem");
             orderItemDAO.save(orderItem);
         }
 
