@@ -13,6 +13,7 @@ public class CustomerMenuView {
     private JFrame frame;
     private JPanel cardPanel;
     private JButton viewOrderButton;
+    private JButton orderStatusButton; // 新增status按钮
     private Map<Dish, JButton> orderButtons = new HashMap<>(); // Store buttons associated with each dish
 
     public CustomerMenuView() {
@@ -58,6 +59,12 @@ public class CustomerMenuView {
         bottomPanel.add(viewOrderButton);
         panel.add(bottomPanel, BorderLayout.SOUTH);
 
+        // 新增 Order Status 按钮
+        orderStatusButton = new JButton("Order Status");
+        bottomPanel.add(orderStatusButton);
+        panel.add(bottomPanel, BorderLayout.SOUTH);
+
+
         frame.add(panel);
     }
 
@@ -72,6 +79,11 @@ public class CustomerMenuView {
 
     public JButton getOrderButton(Dish dish) {
         return orderButtons.get(dish);
+    }
+
+    // 提供按钮的访问方法
+    public JButton getOrderStatusButton() { 
+        return orderStatusButton;
     }
 
     public JPanel createDishCard(Dish dish, ActionListener orderAction) {
